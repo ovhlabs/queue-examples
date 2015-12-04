@@ -1,0 +1,12 @@
+{
+  "name": "qaas-nodejs-client",
+  "version": "0.1.0",
+  "description": "Qaas node js client example",
+  "main": "client.js",
+  "dependencies" : {
+    "kafka-node" : "0.2.29",
+    "cliparse"   : "0.2.5"
+  },
+  "author": "",
+  "license": "ISC"
+}
