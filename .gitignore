@@ -1,4 +1,10 @@
-scala/target
-scala/project/project
-scala/project/target
+scala_kafka_0.8.2/target
+scala_kafka_0.8.2/cache
+scala_kafka_0.9.0/target
+scala_kafka_0.9.0/cache
+scala_kafka_0.8.2/project/project
+scala_kafka_0.9.0/project/project
+scala_kafka_0.8.2/project/target
+scala_kafka_0.9.0/project/target
 nodejs/node_modules
+go/qaas-client

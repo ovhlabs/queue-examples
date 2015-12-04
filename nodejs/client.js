@@ -3,6 +3,8 @@ var kafka = require('kafka-node');
 var parsers = cliparse.parsers;
 
 function prodModule(params) {
+  console.log("prod")
+  console.log(params)
   var HighLevelProducer = kafka.HighLevelProducer
   var zkUrl = params.options.zk+"/"+params.options.auth
   var client = new kafka.Client(
@@ -11,7 +13,7 @@ function prodModule(params) {
   )
   var producer = new HighLevelProducer(client)
   payloads = [
-      { topic: 'topic1', messages: 'hi' }
+      { topic: params.options.topic, messages: 'hi' }
   ];
   producer.on('ready', function () {
       console.log("Producer ready")
@@ -51,8 +53,7 @@ function consModule(params) {
 }
 var options = [
   cliparse.option("zk", { aliases: ["z"], description: "zookeeper connection string", default: "127.0.0.1:2181"}),
-  cliparse.option("kafka", { aliases: ["k"], description: "kafka connection string", default: "127.0.0.0.1:9092"}),
-  cliparse.option("auth", { aliases: ["a"], description: "authentication", default: ""}),
+  cliparse.option("key", { aliases: ["k"], description: "key", default: ""}),
   cliparse.option("group-id", { aliases: ["g"], description: "group id", default: "qaas-node-client-group"}),
   cliparse.option("topic", { aliases: ["t"], description: "topic to push to", default: "topic1"})
 ]
