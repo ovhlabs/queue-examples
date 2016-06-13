@@ -1,0 +1,19 @@
+language: go
+go:
+  - 1.6
+
+install: true
+script: "make"
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: TBD
+  file:
+    - golang/bin/docker-machine-driver-ovh-darwin-amd64
+    - golang/bin/docker-machine-driver-ovh-linux-amd64
+    - golang/bin/docker-machine-driver-ovh-windows-amd64
+  on:
+    repo: runabove/queue-examples
+    tags: true
