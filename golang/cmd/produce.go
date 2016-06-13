@@ -13,6 +13,7 @@ var produceCmd = &cobra.Command{
 	Short: "Produce a message to a given topic",
 	Run: func(cmd *cobra.Command, args []string) {
 		var config = sarama.NewConfig()
+		config.ClientID = key
 		producer, err := sarama.NewSyncProducer([]string{host}, config)
 		if err != nil {
 			fmt.Printf("Err : %v\n", err)
