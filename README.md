@@ -1,5 +1,7 @@
 ## QaaS client examples
 
+[![Build Status](https://travis-ci.org/runabove/queue-examples.svg?branch=master)](https://travis-ci.org/runabove/queue-examples)
+
 * [Go](golang)
 * [NodeJs](nodejs)
 * [Python](python)
