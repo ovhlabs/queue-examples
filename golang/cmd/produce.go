@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 
 	"github.com/Shopify/sarama"
 	"github.com/spf13/cobra"
@@ -16,20 +18,23 @@ var produceCmd = &cobra.Command{
 		config.ClientID = key
 		producer, err := sarama.NewSyncProducer([]string{host}, config)
 		if err != nil {
-			fmt.Printf("Err : %v\n", err)
+			fmt.Println(err)
+			os.Exit(1)
 		}
 		defer func() {
 			if err := producer.Close(); err != nil {
-				fmt.Printf("Err : %v\n", err)
+				fmt.Println("Fail to kill producer")
 			}
 		}()
-
-		msg := &sarama.ProducerMessage{Topic: topic, Value: sarama.StringEncoder(message)}
-		partition, offset, err := producer.SendMessage(msg)
-		if err != nil {
-			fmt.Printf("FAILED to send message: %s\n", err)
-		} else {
-			fmt.Printf("> message sent to partition %d at offset %d\n", partition, offset)
+		s := bufio.NewScanner(os.Stdin)
+		for s.Scan() {
+			msg := &sarama.ProducerMessage{Topic: topic, Value: sarama.StringEncoder(s.Text())}
+			partition, offset, err := producer.SendMessage(msg)
+			if err != nil {
+				fmt.Printf("FAILED to send message: %s\n", err)
+			} else {
+				fmt.Printf("> %s sent to partition %d at offset %d\n", s.Text(), partition, offset)
+			}
 		}
 	},
 }

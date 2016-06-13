@@ -24,6 +24,7 @@ var consumeCmd = &cobra.Command{
 		var config = sarama.NewConfig()
 		config.ClientID = key
 		client, err := sarama.NewClient([]string{host}, config)
+		HandleError(err)
 
 		offsetManager, err := sarama.NewOffsetManagerFromClient(group, client)
 		HandleError(err)
@@ -57,7 +58,7 @@ var consumeCmd = &cobra.Command{
 		for {
 			select {
 			case msg := <-partitionConsumer.Messages():
-				fmt.Printf("Data : %v\n", msg)
+				fmt.Printf("%s\n", string(msg.Value))
 				partitionOffsetManager.MarkOffset(msg.Offset, topic)
 			case <-signals:
 				break ConsumerLoop
