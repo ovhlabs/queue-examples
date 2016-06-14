@@ -86,8 +86,8 @@ This example uses akka-reactive-streams and kafka 0.8.2.1.
 
 ## Consume data
 
-    sbt "run -z $HOST:2181 -k $HOST:9092 -i $KEY_ID -s $KEY_SECRET -t applicationid.topic1 -m cons"
+    sbt "run produce--kafka $HOST:9092 --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC"
 
 ## Produce data
 
-    sbt "run -z $HOST:2181 -k $HOST:9092 -i $KEY_ID -s $KEY_SECRET -t applicationid.topic1 -m prod"
+    sbt "run consume --kafka $HOST:9092 --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.python-${GROUP}"
