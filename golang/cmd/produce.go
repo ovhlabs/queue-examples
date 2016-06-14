@@ -15,7 +15,9 @@ var produceCmd = &cobra.Command{
 	Short: "Produce a message to a given topic",
 	Run: func(cmd *cobra.Command, args []string) {
 		var config = sarama.NewConfig()
+		// Set key as the client id for authentication
 		config.ClientID = key
+
 		producer, err := sarama.NewSyncProducer([]string{host}, config)
 		if err != nil {
 			fmt.Println(err)
@@ -27,8 +29,11 @@ var produceCmd = &cobra.Command{
 			}
 		}()
 		s := bufio.NewScanner(os.Stdin)
+		// Reads from the scann
 		for s.Scan() {
 			msg := &sarama.ProducerMessage{Topic: topic, Value: sarama.StringEncoder(s.Text())}
+
+			// Send each line to the kafka instance
 			partition, offset, err := producer.SendMessage(msg)
 			if err != nil {
 				fmt.Printf("FAILED to send message: %s\n", err)
@@ -39,6 +44,7 @@ var produceCmd = &cobra.Command{
 	},
 }
 
+// init Register the command
 func init() {
 	RootCmd.AddCommand(produceCmd)
 }

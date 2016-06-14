@@ -24,26 +24,27 @@ var consumeCmd = &cobra.Command{
 
 		//Create a new client
 		var config = sarama.NewConfig()
+		// Set key as the client id for authentication
 		config.ClientID = key
 		client, err := sarama.NewClient([]string{host}, config)
 		HandleError(err)
 
-		//create an offsetManager
+		// Create an offsetManager
 		offsetManager, err := sarama.NewOffsetManagerFromClient(group, client)
 		HandleError(err)
 
-		//create a client
+		// Create a client
 		consumer, err := sarama.NewConsumerFromClient(client)
 		HandleError(err)
 
-		//create the message chan, that will receive the queue
+		// Create the message chan, that will receive the queue
 		messagesChan := make(chan string)
 
 		// read the number of partition for the given topic
 		partitions, err := consumer.Partitions(topic)
 		HandleError(err)
 
-		//create a consumer for each partition
+		// Create a consumer for each partition
 		for _, p := range partitions {
 			partitionOffsetManager, err := offsetManager.ManagePartition(topic, p)
 			HandleError(err)
@@ -55,7 +56,7 @@ var consumeCmd = &cobra.Command{
 			HandleError(err)
 			defer partitionConsumer.AsyncClose()
 
-			//asynchronously handle message
+			// Asynchronously handle message
 			go consumptionHandler(partitionConsumer, partitionOffsetManager, messagesChan)
 		}
 
@@ -74,11 +75,12 @@ var consumeCmd = &cobra.Command{
 	},
 }
 
+// init Register the command
 func init() {
 	RootCmd.AddCommand(consumeCmd)
 }
 
-// consumptionHandler pipes the handled messages and push them to a chan
+// ConsumptionHandler pipes the handled messages and push them to a chan
 func consumptionHandler(pc sarama.PartitionConsumer, po sarama.PartitionOffsetManager, messagesChan chan string) {
 	for {
 		select {

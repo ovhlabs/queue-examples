@@ -11,7 +11,6 @@ var host string
 var group string
 var key string
 var topic string
-var message string
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -34,5 +33,4 @@ func init() {
 	RootCmd.PersistentFlags().StringVar(&group, "group", "", "The group to use as a consumer")
 	RootCmd.PersistentFlags().StringVar(&host, "host", "", "The host to connect to")
 	RootCmd.PersistentFlags().StringVar(&key, "key", "", "The authentication key to use")
-	RootCmd.PersistentFlags().StringVar(&message, "message", "my grumpy message", "The message to send")
 }
