@@ -31,11 +31,11 @@ Build Go binary:
 
 ## Consume data
 
-    golang/bin/qaas-client-darwin-amd64 consume --key $KEY --topic $TOPIC --host $HOST
+    golang/bin/qaas-client-darwin-amd64 consume --key $KEY --topic $PREFIX.$TOPIC --host $HOST:9092
 
 ## Produce data
 
-    golang/bin/qaas-client-darwin-amd64 produce --key $KEY --topic $TOPIC --host $HOST
+    golang/bin/qaas-client-darwin-amd64 produce --key $KEY --topic $PREFIX.$TOPIC --host $HOST:9092
 
 # Node.js
 
@@ -52,11 +52,11 @@ Install Node dependencies:
 
 ## Consume data
 
-    node client.js cons -k $HOST:9092 -a $KEY -t applicationid.topic1
+    node client.js consume --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC
 
 ## Produce data
 
-    node client.js prod -k $HOST:9092 -a $KEY -t applicationid.topic1
+    node client.js produce --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC
 
 # Python
 
