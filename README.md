@@ -56,7 +56,7 @@ Install Node dependencies:
 
 ## Consume data
 
-    node client.js consume --host $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.golang-${GROUP}
+    node client.js consume --host $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.nodejs-${GROUP}
 
 # Python
 
@@ -77,7 +77,7 @@ Install Node dependencies:
 ## Consume
 
 ~~~
- python client.py consume --host $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.golang-${GROUP}
+ python client.py consume --host $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.python-${GROUP}
  ~~~
 
 # Scala
