@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var host string
+var kafka string
 var group string
 var key string
 var topic string
@@ -31,6 +31,6 @@ func Execute() {
 func init() {
 	RootCmd.PersistentFlags().StringVar(&topic, "topic", "", "Destination topic")
 	RootCmd.PersistentFlags().StringVar(&group, "group", "", "The group to use as a consumer")
-	RootCmd.PersistentFlags().StringVar(&host, "host", "", "The host to connect to")
+	RootCmd.PersistentFlags().StringVar(&kafka, "kafka", "", "The host to connect to")
 	RootCmd.PersistentFlags().StringVar(&key, "key", "", "The authentication key to use")
 }

@@ -18,7 +18,7 @@ var produceCmd = &cobra.Command{
 		// Set key as the client id for authentication
 		config.ClientID = key
 
-		producer, err := sarama.NewSyncProducer([]string{host}, config)
+		producer, err := sarama.NewSyncProducer([]string{kafka}, config)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
