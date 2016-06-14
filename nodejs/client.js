@@ -1,36 +1,43 @@
 var cliparse = require("cliparse");
 var kafka = require('kafka-node');
+var readline = require('readline');
 var parsers = cliparse.parsers;
 
+var rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+  terminal: false
+});
+
 function prodModule(params) {
-  console.log("prod")
-  console.log(params)
   var HighLevelProducer = kafka.HighLevelProducer
-  var zkUrl = params.options.zk+"/"+params.options.auth
+  var zkUrl = params.options.zk+"/"+params.options.key
   var client = new kafka.Client(
     zkUrl,
-    params.options.auth
+    params.options.key
   )
   var producer = new HighLevelProducer(client)
-  payloads = [
-      { topic: params.options.topic, messages: 'hi' }
-  ];
   producer.on('ready', function () {
-      console.log("Producer ready")
+    rl.on('line', function(line){
+      payloads = [
+          { topic: params.options.topic, messages: line }
+      ];
       producer.send(payloads, function (err, data) {
-          console.log(data);
+        kv = data[params.options.topic]
+        Object.keys(kv).forEach(function(p) {
+          console.log("> message sent to partition "+p+" at offset "+kv[p]);
+        })
       });
+    })
   });
 }
 
 function consModule(params) {
-  console.log("cons")
-  console.log(params)
   var Consumer = kafka.Consumer
-  var zkUrl = params.options.zk+"/"+params.options.auth
+  var zkUrl = params.options.zk+"/"+params.options.key
   var client = new kafka.Client(
     zkUrl,
-    params.options.auth
+    params.options.key
   )
   consumer = new Consumer(
     client,
@@ -42,12 +49,11 @@ function consModule(params) {
       fetchMaxWaitMs: 100,
       fetchMinBytes: 1,
       fetchMaxBytes: 1024 * 10,
-      // fromOffset: false,
       encoding: 'utf8'
     }
   )
   consumer.on('message', function (message) {
-      console.log(message);
+      console.log(message.value);
   });
 
 }
@@ -64,7 +70,7 @@ var cliParser = cliparse.cli({
   description: "Simple node js producer/consumer",
   commands: [
     cliparse.command(
-      "cons",
+      "consume",
       {
         description: "consume message on the given topic",
         options: options
@@ -72,9 +78,9 @@ var cliParser = cliparse.cli({
       consModule),
 
     cliparse.command(
-      "prod",
+      "produce",
       {
-        description: "produce message on the given topic",
+        description: "produce message on the given topic from stdin",
         options: options
       },
       prodModule)
