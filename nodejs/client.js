@@ -11,7 +11,7 @@ var rl = readline.createInterface({
 
 function prodModule(params) {
   var HighLevelProducer = kafka.HighLevelProducer
-  var zkUrl = params.options.zk+"/"+params.options.key
+  var zkUrl = params.options.host+"/"+params.options.key
   var client = new kafka.Client(
     zkUrl,
     params.options.key
@@ -33,17 +33,17 @@ function prodModule(params) {
 }
 
 function consModule(params) {
-  var Consumer = kafka.Consumer
-  var zkUrl = params.options.zk+"/"+params.options.key
+  var HighLevelConsumer = kafka.HighLevelConsumer
+  var zkUrl = params.options.host+"/"+params.options.key
   var client = new kafka.Client(
     zkUrl,
     params.options.key
   )
-  consumer = new Consumer(
+  consumer = new HighLevelConsumer(
     client,
     [ { topic: params.options.topic} ],
     {
-      groupId: params.options.groupid,
+      groupId: params.options.group,
       autoCommit: true,
       autoCommitIntervalMs: 500,
       fetchMaxWaitMs: 100,
@@ -58,10 +58,10 @@ function consModule(params) {
 
 }
 var options = [
-  cliparse.option("zk", { aliases: ["z"], description: "zookeeper connection string", default: "127.0.0.1:2181"}),
-  cliparse.option("key", { aliases: ["k"], description: "key", default: ""}),
-  cliparse.option("group-id", { aliases: ["g"], description: "group id", default: "qaas-node-client-group"}),
-  cliparse.option("topic", { aliases: ["t"], description: "topic to push to", default: "topic1"})
+  cliparse.option("host", { description: "zookeeper connection string", default: "127.0.0.1:2181"}),
+  cliparse.option("key", { description: "key", default: ""}),
+  cliparse.option("group", { description: "group id", default: "qaas-node-client-group"}),
+  cliparse.option("topic", { description: "topic to push to", default: "topic1"})
 ]
 
 
