@@ -33,17 +33,17 @@ function prodModule(params) {
 }
 
 function consModule(params) {
-  var Consumer = kafka.Consumer
+  var HighLevelConsumer = kafka.HighLevelConsumer
   var zkUrl = params.options.host+"/"+params.options.key
   var client = new kafka.Client(
     zkUrl,
     params.options.key
   )
-  consumer = new Consumer(
+  consumer = new HighLevelConsumer(
     client,
     [ { topic: params.options.topic} ],
     {
-      groupId: params.options.groupid,
+      groupId: params.options.group,
       autoCommit: true,
       autoCommitIntervalMs: 500,
       fetchMaxWaitMs: 100,
@@ -60,7 +60,7 @@ function consModule(params) {
 var options = [
   cliparse.option("host", { description: "zookeeper connection string", default: "127.0.0.1:2181"}),
   cliparse.option("key", { description: "key", default: ""}),
-  cliparse.option("group-id", { description: "group id", default: "qaas-node-client-group"}),
+  cliparse.option("group", { description: "group id", default: "qaas-node-client-group"}),
   cliparse.option("topic", { description: "topic to push to", default: "topic1"})
 ]
 
