@@ -31,11 +31,11 @@ Build Go binary:
 
 ## Consume data
 
-    golang/bin/qaas-client-darwin-amd64 consume --host $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.golang-${GROUP}
+    golang/bin/qaas-client-darwin-amd64 consume --kafka $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.golang-${GROUP}
 
 ## Produce data
 
-    golang/bin/qaas-client-darwin-amd64 produce --host $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC
+    golang/bin/qaas-client-darwin-amd64 produce --kafka $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC
 
 # Node.js
 
@@ -52,11 +52,11 @@ Install Node dependencies:
 
 ## Produce data
 
-    node client.js produce --host $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC
+    node client.js produce --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC
 
 ## Consume data
 
-    node client.js consume --host $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.nodejs-${GROUP}
+    node client.js consume --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.nodejs-${GROUP}
 
 # Python
 
@@ -71,13 +71,13 @@ Install Node dependencies:
 ## Produce
 
 ~~~
- python client.py produce --host $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC
+ python client.py produce --kafka $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC
 ~~~
 
 ## Consume
 
 ~~~
- python client.py consume --host $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.python-${GROUP}
+ python client.py consume --kafka $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.python-${GROUP}
  ~~~
 
 # Scala

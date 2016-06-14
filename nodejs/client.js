@@ -11,7 +11,7 @@ var rl = readline.createInterface({
 
 function prodModule(params) {
   var HighLevelProducer = kafka.HighLevelProducer
-  var zkUrl = params.options.host+"/"+params.options.key
+  var zkUrl = params.options.zk+"/"+params.options.key
   var client = new kafka.Client(
     zkUrl,
     params.options.key
@@ -34,7 +34,7 @@ function prodModule(params) {
 
 function consModule(params) {
   var HighLevelConsumer = kafka.HighLevelConsumer
-  var zkUrl = params.options.host+"/"+params.options.key
+  var zkUrl = params.options.zk+"/"+params.options.key
   var client = new kafka.Client(
     zkUrl,
     params.options.key
@@ -58,7 +58,7 @@ function consModule(params) {
 
 }
 var options = [
-  cliparse.option("host", { description: "zookeeper connection string", default: "127.0.0.1:2181"}),
+  cliparse.option("zk", { description: "zookeeper connection string", default: "127.0.0.1:2181"}),
   cliparse.option("key", { description: "key", default: ""}),
   cliparse.option("group", { description: "group id", default: "qaas-node-client-group"}),
   cliparse.option("topic", { description: "topic to push to", default: "topic1"})

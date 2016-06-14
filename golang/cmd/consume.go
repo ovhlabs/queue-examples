@@ -26,7 +26,7 @@ var consumeCmd = &cobra.Command{
 		var config = sarama.NewConfig()
 		// Set key as the client id for authentication
 		config.ClientID = key
-		client, err := sarama.NewClient([]string{host}, config)
+		client, err := sarama.NewClient([]string{kafka}, config)
 		HandleError(err)
 
 		// Create an offsetManager
