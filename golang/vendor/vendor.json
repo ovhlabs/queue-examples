@@ -37,7 +37,19 @@
 			"path": "github.com/klauspost/crc32",
 			"revision": "19b0b332c9e4516a6370a0456e6182c3b5036720",
 			"revisionTime": "2016-02-19T14:26:09Z"
+		},
+		{
+			"checksumSHA1": "gAhLoEQbazL8ZNWQzA9ch/8kB/s=",
+			"path": "github.com/spf13/cobra",
+			"revision": "65a708cee0a4424f4e353d031ce440643e312f92",
+			"revisionTime": "2016-02-07T18:29:17Z"
+		},
+		{
+			"checksumSHA1": "MrBzoMkuXdrGKo09/ka+JCC2Mlk=",
+			"path": "github.com/spf13/pflag",
+			"revision": "7f60f83a2c81bc3c3c0d5297f61ddfa68da9d3b7",
+			"revisionTime": "2015-10-24T10:54:09Z"
 		}
 	],
-	"rootPath": "github.com/runabove/queue-examples/go"
+	"rootPath": "github.com/runabove/queue-examples/golang"
 }
