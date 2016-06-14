@@ -11,8 +11,8 @@ import (
 
 func HandleError(err error) {
 	if err != nil {
-		fmt.Printf("Err : %v", err)
-		os.Exit(0)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 }
 
@@ -21,35 +21,44 @@ var consumeCmd = &cobra.Command{
 	Use:   "consume",
 	Short: "Consume message from the topic and display them.",
 	Run: func(cmd *cobra.Command, args []string) {
+
+		//Create a new client
 		var config = sarama.NewConfig()
+		// Set key as the client id for authentication
 		config.ClientID = key
 		client, err := sarama.NewClient([]string{host}, config)
 		HandleError(err)
 
+		// Create an offsetManager
 		offsetManager, err := sarama.NewOffsetManagerFromClient(group, client)
 		HandleError(err)
 
-		partitionOffsetManager, err := offsetManager.ManagePartition(topic, 0)
-		HandleError(err)
-
+		// Create a client
 		consumer, err := sarama.NewConsumerFromClient(client)
 		HandleError(err)
 
-		offset, _ := partitionOffsetManager.NextOffset()
-		partitionConsumer, err := consumer.ConsumePartition(topic, 0, offset)
+		// Create the message chan, that will receive the queue
+		messagesChan := make(chan string)
+
+		// read the number of partition for the given topic
+		partitions, err := consumer.Partitions(topic)
 		HandleError(err)
 
-		defer func() {
-			if err := consumer.Close(); err != nil {
-				fmt.Printf("Err : %v", err)
-			}
-			if err := partitionOffsetManager.Close(); err != nil {
-				fmt.Printf("Err : %v\n", err)
-			}
-			if err := partitionConsumer.Close(); err != nil {
-				fmt.Printf("Err : %v\n", err)
-			}
-		}()
+		// Create a consumer for each partition
+		for _, p := range partitions {
+			partitionOffsetManager, err := offsetManager.ManagePartition(topic, p)
+			HandleError(err)
+			defer partitionOffsetManager.AsyncClose()
+
+			// Start a consumer at next offset
+			offset, _ := partitionOffsetManager.NextOffset()
+			partitionConsumer, err := consumer.ConsumePartition(topic, p, offset)
+			HandleError(err)
+			defer partitionConsumer.AsyncClose()
+
+			// Asynchronously handle message
+			go consumptionHandler(partitionConsumer, partitionOffsetManager, messagesChan)
+		}
 
 		// Trap SIGINT to trigger a shutdown.
 		signals := make(chan os.Signal, 1)
@@ -57,17 +66,32 @@ var consumeCmd = &cobra.Command{
 	ConsumerLoop:
 		for {
 			select {
-			case msg := <-partitionConsumer.Messages():
-				fmt.Printf("%s\n", string(msg.Value))
-				partitionOffsetManager.MarkOffset(msg.Offset, topic)
+			case msg := <-messagesChan:
+				fmt.Printf("%s\n", msg)
 			case <-signals:
 				break ConsumerLoop
 			}
 		}
-
 	},
 }
 
+// init Register the command
 func init() {
 	RootCmd.AddCommand(consumeCmd)
+}
+
+// ConsumptionHandler pipes the handled messages and push them to a chan
+func consumptionHandler(pc sarama.PartitionConsumer, po sarama.PartitionOffsetManager, messagesChan chan string) {
+	for {
+		select {
+		case msg := <-pc.Messages():
+			// Write message consumed in the sub channel
+			messagesChan <- string(msg.Value)
+			po.MarkOffset(msg.Offset, topic)
+		case err := <-pc.Errors():
+			fmt.Println(err)
+		case offsetErr := <-po.Errors():
+			fmt.Println(offsetErr)
+		}
+	}
 }
