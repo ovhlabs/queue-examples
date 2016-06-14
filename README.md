@@ -31,11 +31,11 @@ Build Go binary:
 
 ## Consume data
 
-    golang/bin/qaas-client-darwin-amd64 consume --key $KEY --topic $PREFIX.$TOPIC --host $HOST:9092
+    golang/bin/qaas-client-darwin-amd64 consume --host $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.golang-${GROUP}
 
 ## Produce data
 
-    golang/bin/qaas-client-darwin-amd64 produce --key $KEY --topic $PREFIX.$TOPIC --host $HOST:9092
+    golang/bin/qaas-client-darwin-amd64 produce --host $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC
 
 # Node.js
 
@@ -50,13 +50,13 @@ Install Node dependencies:
 
   make build-node
 
-## Consume data
-
-    node client.js consume --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC
-
 ## Produce data
 
-    node client.js produce --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC
+    node client.js produce --host $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC
+
+## Consume data
+
+    node client.js consume --host $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.golang-${GROUP}
 
 # Python
 
@@ -71,14 +71,14 @@ Install Node dependencies:
 ## Produce
 
 ~~~
- python client.py --key "mysecret" --host 192.168.99.100:9092 --mode prod --group "test" --topic "applicationid.test"
+ python client.py produce --host $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC
 ~~~
 
 ## Consume
 
 ~~~
- python client.py --key "mysecret" --host 192.168.99.100:9092 --mode cons --group "test" --topic "applicationid.test"
-~~~
+ python client.py consume --host $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.golang-${GROUP}
+ ~~~
 
 # Scala
 
