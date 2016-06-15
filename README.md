@@ -1,93 +1,125 @@
-## QaaS client examples
+# OVH Paas Queue client examples
 
 [![Build Status](https://travis-ci.org/runabove/queue-examples.svg?branch=master)](https://travis-ci.org/runabove/queue-examples)
 
-* [Go](golang)
+* [Golang](golang)
 * [NodeJs](nodejs)
 * [Python](python)
 * [Scala](scala_kafka_0.8.2)
 
-# Basic concepts
+## Basic concepts
 
-Every client uses two constants :
+Each client example can be run in 2 modes: `produce` or `consume`.
 
-- Key   : The key used for the authentication. This key is linked to your application.
-- Topic : The topic to which data will be pushed. This topic should be prefixed
-    by your application id
+The two options `--key` and `--topic` are always mandatory:
 
-Every example uses the key as a client id to authenticate and pushed on a topic prefixed by the application id.
+- `--key` to configure the key to be authenticated to the OVH Paas Queue.
+- `--topic` to declare the authorized topic to produce to.
 
-# Golang
+Depending the client example needs the Kafka or the Zookeeper seed URL is used:
 
-## Requirements
+- `--kafka` for the Kafka broker seed URL
+- `--zk` for the Zookeeper broker seed URL
+
+In the `consume` mode:
+
+- `--group` is used to configure the consumer group id
+
+***Important to notice***:
+- ***The key is used as the Kafka client.id or the Zookeeper root path.***
+- ***The topic must be prefixed with the human application id corresponding to the key.***
+
+## Golang
+
+### Requirements
 
 * Go >= 1.5
 
-## Setup
+### Setup
 
 Build Go binary:
 
     make build-go
 
-## Consume data
+### Consume data
 
-    golang/bin/qaas-client-darwin-amd64 consume --kafka $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.golang-${GROUP}
+    golang/bin/qaas-client-darwin-amd64 consume \
+        --kafka $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.golang-${GROUP}
 
-## Produce data
+### Produce data
 
-    golang/bin/qaas-client-darwin-amd64 produce --kafka $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC
+    golang/bin/qaas-client-darwin-amd64 produce \
+        --kafka $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC
 
 # Node.js
 
-## Requirements
+### Requirements
 
 * Node.js
 * NPM
 
-## Setup
+### Setup
 
-Install Node dependencies:
+Install the nodejs dependencies:
 
-  make build-node
+    make node-install-deps
+    cd nodejs
 
-## Produce data
+### Produce data
 
-    node client.js produce --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC
+    node client.js produce \
+        --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC
 
-## Consume data
+### Consume data
 
-    node client.js consume --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.nodejs-${GROUP}
+    node client.js consume \
+        --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.nodejs-${GROUP}
 
-# Python
+## Python
 
-## Requirements
+### Requirements
 
-* Python version 2.7
+* Python >= 2.7
 
-## Setup
+### Setup
 
-    make build-python
+Install the python dependencies:
 
-## Produce
+    make python-install-deps
+    cd python
 
-~~~
- python client.py produce --kafka $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC
-~~~
+### Produce
 
-## Consume
+    python client.py produce \
+        --kafka $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC
 
-~~~
- python client.py consume --kafka $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.python-${GROUP}
- ~~~
+### Consume
 
-# Scala
+    python client.py consume \
+        --kafka $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.python-${GROUP}
+
+## Scala
 
 This example uses akka-reactive-streams and kafka 0.8.2.1.
 
-## Consume data
+### Setup
 
-    sbt "run produce--kafka $HOST:9092 --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC"
+* Scala
+* SBT
 
-## Produce data
+### Consume data
 
-    sbt "run consume --kafka $HOST:9092 --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.python-${GROUP}"
+    sbt "run produce \
+        --kafka $HOST:9092 --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC"
+
+### Produce data
+
+    sbt "run consume \
+        --kafka $HOST:9092 --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.scala-${GROUP}"
+
+
+## Docker
+
+Each example can be build using Docker.
+
+    make build-docker
