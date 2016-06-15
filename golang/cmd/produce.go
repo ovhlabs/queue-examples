@@ -28,8 +28,11 @@ var produceCmd = &cobra.Command{
 				fmt.Println("Fail to kill producer")
 			}
 		}()
+
+		fmt.Println("Write to STDIN to send a message:")
+
 		s := bufio.NewScanner(os.Stdin)
-		// Reads from the scann
+		// Read from STDIN
 		for s.Scan() {
 			msg := &sarama.ProducerMessage{Topic: topic, Value: sarama.StringEncoder(s.Text())}
 
