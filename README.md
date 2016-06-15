@@ -5,7 +5,7 @@
 * [Golang](golang)
 * [NodeJs](nodejs)
 * [Python](python)
-* [Scala](scala_kafka_0.8.2)
+* [Scala](scala)
 
 ## Basic concepts
 
@@ -55,8 +55,8 @@ Build Go binary:
 
 ### Requirements
 
-* Node.js
-* NPM
+* Node.js >= 4.x
+* NPM >= 2.x
 
 ### Setup
 
@@ -104,8 +104,8 @@ This example uses akka-reactive-streams and kafka 0.8.2.1.
 
 ### Setup
 
-* Scala
-* SBT
+* Scala >= 2.11.x
+* SBT >= 0.13.x
 
 ### Consume data
 
