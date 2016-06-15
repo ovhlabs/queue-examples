@@ -32,12 +32,12 @@ build-docker-python:
 
 run-golang-consumer:
 	docker run --rm qaas/golang-client-example \
-		consume --kafka ${BROKER}:9092 --key ${KEY} --topic ${PREFIX}.${TOPIC} --group ${PREFIX}.golang-${GROUP}
+		consume --kafka ${HOST}:9092 --key ${KEY} --topic ${PREFIX}.${TOPIC} --group ${PREFIX}.golang-${GROUP}
 
 run-nodejs-consumer:
 	docker run --rm qaas/nodejs-client-example \
-		consume --zk ${BROKER}:2181 --key ${KEY} --topic ${PREFIX}.${TOPIC} --group ${PREFIX}.nodejs-${GROUP}
+		consume --zk ${HOST}:2181 --key ${KEY} --topic ${PREFIX}.${TOPIC} --group ${PREFIX}.nodejs-${GROUP}
 
 run-python-consumer:
 	docker run --rm qaas/python-client-example \
-		consume --kafka ${BROKER}:9092 --key ${KEY} --topic ${PREFIX}.${TOPIC} --group ${PREFIX}.python-${GROUP}
+		consume --kafka ${HOST}:9092 --key ${KEY} --topic ${PREFIX}.${TOPIC} --group ${PREFIX}.python-${GROUP}
