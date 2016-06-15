@@ -1,10 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 OS="darwin linux windows"
 ARCH="amd64"
 
 for GOOS in $OS; do
     for GOARCH in $ARCH; do
-        architecture="${GOOS}-${GOARCH}"
+        OS="$(tr '[:lower:]' '[:upper:]' <<< ${GOOS:0:1})${GOOS:1}"
+        architecture="${OS}-${GOARCH}"
         echo "Building ${architecture}"
         export GOOS=$GOOS
         export GOARCH=$GOARCH

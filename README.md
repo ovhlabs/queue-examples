@@ -43,12 +43,12 @@ Build Go binary:
 
 ### Consume data
 
-    golang/bin/qaas-client-darwin-amd64 consume \
+    golang/bin/qaas-client-$(uname -s)-amd64 consume \
         --kafka $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.golang-${GROUP}
 
 ### Produce data
 
-    golang/bin/qaas-client-darwin-amd64 produce \
+    golang/bin/qaas-client-$(uname -s)-amd64 produce \
         --kafka $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC
 
 # Node.js
