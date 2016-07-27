@@ -87,7 +87,7 @@ func consumptionHandler(pc sarama.PartitionConsumer, po sarama.PartitionOffsetMa
 		case msg := <-pc.Messages():
 			// Write message consumed in the sub channel
 			messagesChan <- string(msg.Value)
-			po.MarkOffset(msg.Offset, topic)
+			po.MarkOffset(msg.Offset+1, topic)
 		case err := <-pc.Errors():
 			fmt.Println(err)
 		case offsetErr := <-po.Errors():
