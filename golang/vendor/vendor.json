@@ -3,10 +3,10 @@
 	"ignore": "test",
 	"package": [
 		{
-			"checksumSHA1": "4IOT8UR9wSZgyMvEXDVKnF36B9Q=",
+			"checksumSHA1": "hHRdFSZIysY5y0Nam8bvx30T8Po=",
 			"path": "github.com/Shopify/sarama",
-			"revision": "97511b29ac093c98470373da24fe7072cafa1f09",
-			"revisionTime": "2016-05-17T12:27:25Z"
+			"revision": "e8020bffa1cae3ddf8068cb03416fc53d1627f3d",
+			"revisionTime": "2016-07-26T17:35:16Z"
 		},
 		{
 			"checksumSHA1": "5rPfda8jFccr3A6heL+JAmi9K9g=",
@@ -21,6 +21,12 @@
 			"revisionTime": "2016-01-04T19:15:39Z"
 		},
 		{
+			"checksumSHA1": "WHl96RVZlOOdF4Lb1OOadMpw8ls=",
+			"path": "github.com/eapache/go-xerial-snappy",
+			"revision": "bb955e01b9346ac19dc29eb16586c90ded99a98c",
+			"revisionTime": "2016-06-09T14:24:08Z"
+		},
+		{
 			"checksumSHA1": "AEGF/lRMFJukJAnRqdCVQ/0I+BY=",
 			"path": "github.com/eapache/queue",
 			"revision": "ded5959c0d4e360646dc9e9908cff48666781367",
@@ -31,6 +37,12 @@
 			"path": "github.com/golang/snappy",
 			"revision": "d9eb7a3d35ec988b8585d4a0068e462c27d28380",
 			"revisionTime": "2016-05-29T05:00:41Z"
+		},
+		{
+			"checksumSHA1": "40vJyUB4ezQSn/NSadsKEOrudMc=",
+			"path": "github.com/inconshreveable/mousetrap",
+			"revision": "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75",
+			"revisionTime": "2014-10-17T20:07:13Z"
 		},
 		{
 			"checksumSHA1": "hX+j017F4PEtIUGflAneDtLC6hs=",
