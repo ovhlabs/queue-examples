@@ -12,9 +12,11 @@ def produce(args):
             result = producer.send_messages(args.topic.encode('UTF-8'), line.rstrip().encode('UTF-8'))
             for r in result:
                 print "> message sent to partition %d at offset %d " % (r.partition, r.offset)
-    except KeyboardInterrupt:
-        sys.exit(0)
 
+    except KeyboardInterrupt:
+        producer.close()
+        client.close()
+        sys.exit(0)
 
 def consume(args):
     client = KafkaClient(args.kafka, client_id=args.key)
@@ -28,9 +30,11 @@ def consume(args):
 
         for message in consumer:
             print "%s" % message.value
-    except KeyboardInterrupt:
-        sys.exit(0)
 
+    except KeyboardInterrupt:
+        consumer.close()
+        client.close()
+        sys.exit(0)
 
 parser = argparse.ArgumentParser(description='QAAS producer/consumer')
 subparsers = parser.add_subparsers()
@@ -49,4 +53,3 @@ p.set_defaults(func=produce)
 
 args = parser.parse_args()
 args.func(args)
-
