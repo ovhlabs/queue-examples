@@ -1,11 +1,11 @@
-FROM alpine:3.3
+FROM alpine:3.4
 
 RUN apk --no-cache add python py-pip
 
-WORKDIR /qaas-client
+WORKDIR /ovh-kafka
 
-RUN pip install kafka-python==1.2.1
+RUN pip install kafka-python==1.3.1
 
-COPY . /qaas-client
+COPY . /ovh-kafka
 
 ENTRYPOINT ["python", "client.py"]
