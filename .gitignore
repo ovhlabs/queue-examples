@@ -1,10 +1,8 @@
-scala/target
-scala/cache
-scala_kafka_0.9.0/target
-scala_kafka_0.9.0/cache
-scala/project/project
-scala_kafka_0.9.0/project/project
-scala/project/target
-scala_kafka_0.9.0/project/target
+go/kafka-client*
+
+java-ssl/target
+java-ssl/jaas.conf
+java-ssl/Makefile
+
 nodejs/node_modules
 golang/bin
