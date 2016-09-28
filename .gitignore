@@ -1,8 +1,9 @@
 go/kafka-client*
-
-java-ssl/target
-java-ssl/jaas.conf
-java-ssl/Makefile
+go/bin
 
 nodejs/node_modules
-golang/bin
+
+java/target
+java/jaas.conf
+
+.env

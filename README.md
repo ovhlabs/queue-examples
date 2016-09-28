@@ -1,125 +1,169 @@
-# OVH Paas Queue client examples
+# OVH Queue - Kafka examples
 
 [![Build Status](https://travis-ci.org/runabove/queue-examples.svg?branch=master)](https://travis-ci.org/runabove/queue-examples)
 
-* [Golang](golang)
-* [NodeJs](nodejs)
+Here are Kafka client examples using SASL/SSL in several languages and tested on [OVH Queue](https://www.runabove.com/dbaas-queue.xml) ):
+
+* [Go](go)
 * [Python](python)
-* [Scala](scala)
+* [Java](java)
+* [NodeJs](nodejs)
 
-## Basic concepts
+Each example can be run to consume messages or produce messages from STDIN
+and requires four flags:
 
-Each client example can be run in 2 modes: `produce` or `consume`.
+    --broker    the Kafka broker adress
+    --username  the SASL username
+    --password  the SASL password
+    --topic     the Kafka topic
 
-The two options `--key` and `--topic` are always mandatory:
+***When using OVH Queue the consumer group must be prefixed by the username*** using the
+`--consumer-group` flag (ex: --username collector.admin --consumer-group collector.admin.group).
 
-- `--key` to configure the key to be authenticated to the OVH Paas Queue.
-- `--topic` to declare the authorized topic to produce to.
+## Go
 
-Depending the client example needs the Kafka or the Zookeeper seed URL is used:
-
-- `--kafka` for the Kafka broker seed URL
-- `--zk` for the Zookeeper broker seed URL
-
-In the `consume` mode:
-
-- `--group` is used to configure the consumer group id
-
-***Important to notice***:
-- ***The key is used as the Kafka client.id or the Zookeeper root path.***
-- ***The topic must be prefixed with the human application id corresponding to the key.***
-
-## Golang
-
-### Requirements
+##### Requirements
 
 * Go >= 1.5
 
-### Setup
+##### Setup
 
-Build Go binary:
+Build binary:
 
-    make build-go
+```
+cd go
+go build -o kafka-client
+```
 
-### Consume data
+##### Consume
 
-    golang/bin/qaas-client-$(uname -s)-amd64 consume \
-        --kafka $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.golang-${GROUP}
+```
+kafka-client consume \
+    --broker $HOST:9093 \
+    --username $SASL_USERNAME --password $SASL_PASSWORD \
+    --topic $TOPIC --consumer-group $SASL_USERNAME.group-go
+```
 
-### Produce data
+##### Produce
 
-    golang/bin/qaas-client-$(uname -s)-amd64 produce \
-        --kafka $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC
+```
+kafka-client produce \
+    --broker $HOST:9093 \
+    --username $SASL_USERNAME --password $SASL_PASSWORD \
+    --topic $TOPIC
+```
 
-# Node.js
+## Python
 
-### Requirements
+##### Requirements
+
+* Python >= 2.7
+
+##### Setup
+
+Install dependencies:
+
+```
+cd python
+pip install --upgrade kafka-python==1.3.1
+```
+
+##### Consume
+
+```
+python client.py consume \
+    --broker $HOST:9093 \
+    --username $SASL_USERNAME --password $SASL_PASSWORD \
+    --topic $TOPIC --consumer-group $SASL_USERNAME.group-python
+```
+
+##### Produce
+
+```
+python client.py produce \
+    --broker $HOST:9093 \
+    --username $SASL_USERNAME --password $SASL_PASSWORD \
+    --topic $TOPIC
+```
+
+## Java
+
+##### Requirements
+
+* Java >= 1.8
+* Maven >= 3
+
+##### Setup
+
+The Java client needs a `jaas.conf` file containing SASL login information.
+
+```
+KafkaClient {
+   org.apache.kafka.common.security.plain.PlainLoginModule required
+   username="<YOUR_SASL_USERNAME>"
+   password="<YOUR_SASL_PASSWORD>";
+};
+```
+
+Build the JAR file:
+
+```
+cd java
+mvn compile package
+```
+
+##### Consume
+
+```
+java \
+	-cp target/kafka-example-jar-with-dependencies.jar \
+	-Djava.security.auth.login.config=jaas.conf \
+	ovh.queue.Main consume \
+	--broker $HOST:9093 \
+	--topic $TOPIC --consumer-group $SASL_USERNAME.group-java
+```
+
+##### Produce
+
+```
+java \
+    -cp target/kafka-example-jar-with-dependencies.jar \
+    -Djava.security.auth.login.config=jaas.conf \
+    ovh.queue.Main produce \
+    --broker $HOST:9093 \
+    --topic $TOPIC
+```
+
+## Node.js
+
+##### Requirements
 
 * Node.js >= 4.x
 * NPM >= 2.x
 
-### Setup
+##### Setup
 
-Install the nodejs dependencies:
+Install dependencies:
 
-    make node-install-deps
-    cd nodejs
+```
+cd nodejs
+npm install
+```
 
-### Produce data
+##### Consume
 
-    node client.js produce \
-        --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC
+```
+node client.js consume \
+    --broker $HOST:9093 \
+    --username $SASL_USERNAME --password $SASL_PASSWORD \
+    --topic $TOPIC --consumer-group $SASL_USERNAME.group-node
+```
 
-### Consume data
+##### Produce
 
-    node client.js consume \
-        --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.nodejs-${GROUP}
-
-## Python
-
-### Requirements
-
-* Python >= 2.7
-
-### Setup
-
-Install the python dependencies:
-
-    make python-install-deps
-    cd python
-
-### Produce
-
-    python client.py produce \
-        --kafka $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC
-
-### Consume
-
-    python client.py consume \
-        --kafka $HOST:9092 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.python-${GROUP}
-
-## Scala
-
-This example uses akka-reactive-streams and kafka 0.8.2.1.
-
-### Setup
-
-* Scala >= 2.11.x
-* SBT >= 0.13.x
-
-### Consume data
-
-    sbt "run produce \
-        --kafka $HOST:9092 --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC"
-
-### Produce data
-
-    sbt "run consume \
-        --kafka $HOST:9092 --zk $HOST:2181 --key $KEY --topic $PREFIX.$TOPIC --group ${PREFIX}.scala-${GROUP}"
-
-
-## Docker
-
-Each example can be build using Docker.
-
-    make build-docker
+```
+node client.js produce \
+    --broker $HOST:9093 \
+    --username $SASL_USERNAME --password $SASL_PASSWORD \
+    --topic $TOPIC
+```
