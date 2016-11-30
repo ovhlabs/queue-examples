@@ -1,10 +1,10 @@
 {
-  "name": "qaas-nodejs-client",
+  "name": "kafka-client",
   "version": "0.1.0",
-  "description": "Qaas node js client example",
+  "description": "Node.js Kafka client to produce/consume using SASL/SSL",
   "main": "client.js",
   "dependencies" : {
-    "kafka-node" : "0.2.29",
+    "node-rdkafka" : "0.6.1",
     "cliparse"   : "0.2.5"
   },
   "author": "",

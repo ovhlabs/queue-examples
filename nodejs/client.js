@@ -1,90 +1,106 @@
 var cliparse = require("cliparse");
-var kafka = require('kafka-node');
 var readline = require('readline');
-var parsers = cliparse.parsers;
+var kafka = require('node-rdkafka');
 
-var rl = readline.createInterface({
+var stdin = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
   terminal: false
 });
 
-function prodModule(params) {
-  var HighLevelProducer = kafka.HighLevelProducer
-  var zkUrl = params.options.zk+"/"+params.options.key
-  var client = new kafka.Client(
-    zkUrl,
-    params.options.key
-  )
-  var producer = new HighLevelProducer(client)
-  producer.on('ready', function () {
-    rl.on('line', function(line){
-      payloads = [
-          { topic: params.options.topic, messages: line }
-      ];
-      producer.send(payloads, function (err, data) {
-        kv = data[params.options.topic]
-        Object.keys(kv).forEach(function(p) {
-          console.log("> message sent to partition "+p+" at offset "+kv[p]);
-        })
+function produce(params) {
+
+  var producer = new kafka.Producer({
+    'metadata.broker.list': params.options.broker,
+    'security.protocol': 'SASL_SSL',
+    'ssl.ca.location': '/etc/ssl/certs',
+    'api.version.request': 'true',
+    'sasl.mechanisms': 'PLAIN',
+    'sasl.username': params.options.username,
+    'sasl.password': params.options.password,
+    'dr_cb': true // Specifies that we want a delivery-report event to be generated
+  });
+
+  producer.on('event.log', function(log) {
+    console.log('log', log);
+  });
+
+  producer.on('error', function(err) {
+    console.error('Error on producer', err);
+  });
+
+  producer.on('delivery-report', function(report) {
+    console.log('Producer delivery-report', report);
+  });
+
+  producer.connect();
+
+  producer.on('ready', function() {
+    console.log('Ready to produce messages. Write something to stdin...')
+    try {
+
+      var topic = producer.Topic(params.options.topic, {
+       // Make the Kafka broker acknowledges each message (optional)
+       'request.required.acks': 1
       });
-    })
-  });
-}
 
-function consModule(params) {
-  var HighLevelConsumer = kafka.HighLevelConsumer
-  var zkUrl = params.options.zk+"/"+params.options.key
-  var client = new kafka.Client(
-    zkUrl,
-    params.options.key
-  )
-  consumer = new HighLevelConsumer(
-    client,
-    [ { topic: params.options.topic} ],
-    {
-      groupId: params.options.group,
-      autoCommit: true,
-      autoCommitIntervalMs: 500,
-      fetchMaxWaitMs: 100,
-      fetchMinBytes: 1,
-      fetchMaxBytes: 1024 * 10,
-      encoding: 'utf8'
+      stdin.on('line', function(line) {
+        // if partition is set to -1, the default partitioner is used
+        var partition = -1;
+        var value = new Buffer(line);
+        producer.produce(topic, partition, value);
+      });
+
+    } catch (err) {
+      console.error('Fail to produce message', err);
     }
-  )
-  consumer.on('message', function (message) {
-      console.log(message.value);
+  });
+}
+
+function consume(params) {
+  if (!params.options["consumer-group"]) {
+    params.options["consumer-group"] = params.options.username + ".node";
+  }
+
+  var consumer = new kafka.KafkaConsumer({
+    'metadata.broker.list': params.options.broker,
+    'security.protocol': 'SASL_SSL',
+    'ssl.ca.location': '/etc/ssl/certs',
+    'api.version.request': true,
+    'debug': 'protocol,security,broker',
+    'sasl.mechanisms': 'PLAIN',
+    'sasl.username': params.options.username,
+    'sasl.password': params.options.password,
+    'group.id': params.options["consumer-group"]
   });
 
+  consumer.connect();
+
+  consumer.on('ready', function() {
+    console.log('Ready to consume messages...');
+
+    consumer.consume(params.options.topic, function(err, message) {
+      console.log(message.value.toString());
+    });
+
+  });
 }
+
 var options = [
-  cliparse.option("zk", { description: "zookeeper connection string", default: "127.0.0.1:2181"}),
-  cliparse.option("key", { description: "key", default: ""}),
-  cliparse.option("group", { description: "group id", default: "qaas-node-client-group"}),
-  cliparse.option("topic", { description: "topic to push to", default: "topic1"})
-]
+  cliparse.option("broker", { description: "Kafka broker address"}),
+  cliparse.option("topic", { description: "Topic"}),
+  cliparse.option("username", { description: "SASL username"}),
+  cliparse.option("password", { description: "SASL password"}),
+  cliparse.option("consumer-group", { description: "Consumer group"}),
+];
 
-
-var cliParser = cliparse.cli({
-  name: "qaas-client",
-  description: "Simple node js producer/consumer",
-  commands: [
-    cliparse.command(
-      "consume",
-      {
-        description: "consume message on the given topic",
-        options: options
-      },
-      consModule),
-
-    cliparse.command(
-      "produce",
-      {
-        description: "produce message on the given topic from stdin",
-        options: options
-      },
-      prodModule)
-  ]
-});
-
-cliparse.parse(cliParser);
+cliparse.parse(
+  cliparse.cli({
+    name: "kafka-client",
+    description: "Node.js Kafka client to produce/consume using SASL/SSL",
+    commands: [
+      cliparse.command("produce", { description: "Produce messages", options: options }, produce),
+      cliparse.command("consume", { description: "Consume messages", options: options }, consume)
+    ]
+  })
+);
