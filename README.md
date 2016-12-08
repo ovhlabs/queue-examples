@@ -2,23 +2,27 @@
 
 [![Build Status](https://travis-ci.org/runabove/queue-examples.svg?branch=master)](https://travis-ci.org/runabove/queue-examples)
 
-Here are Kafka client examples using SASL/SSL in several languages and tested on [OVH Queue](https://www.runabove.com/dbaas-queue.xml) ):
+Here are Kafka client examples using SASL/SSL in several languages and tested on [OVH Queue](https://www.runabove.com/dbaas-queue.xml).
 
 * [Go](go)
 * [Python](python)
 * [Java](java)
-* [NodeJs](nodejs)
+* [Node.js](nodejs)
 
 Each example can be run to consume messages or produce messages from STDIN
 and requires four flags:
 
-    --broker    the Kafka broker adress
+    --broker    the Kafka broker address
     --username  the SASL username
     --password  the SASL password
     --topic     the Kafka topic
 
 ***When using OVH Queue the consumer group must be prefixed by the username*** using the
 `--consumer-group` flag (ex: --username collector.admin --consumer-group collector.admin.group).
+
+Set the following environment variables to execute the commands shown below:
+ `HOST`, `SASL_USERNAME`, `SASL_PASSWORD`, `TOPIC`.
+
 
 ## Go
 
@@ -38,7 +42,7 @@ go build -o kafka-client
 ##### Consume
 
 ```
-kafka-client consume \
+./kafka-client consume \
     --broker $HOST:9093 \
     --username $SASL_USERNAME --password $SASL_PASSWORD \
     --topic $TOPIC --consumer-group $SASL_USERNAME.group-go
@@ -47,7 +51,7 @@ kafka-client consume \
 ##### Produce
 
 ```
-kafka-client produce \
+./kafka-client produce \
     --broker $HOST:9093 \
     --username $SASL_USERNAME --password $SASL_PASSWORD \
     --topic $TOPIC
