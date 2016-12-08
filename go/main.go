@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
+	"os/signal"
 
 	"github.com/Shopify/sarama"
 	"github.com/spf13/cobra"
+	"gopkg.in/bsm/sarama-cluster.v2"
 )
 
 var (
@@ -19,12 +20,13 @@ var (
 	Verbose bool
 
 	Cli *cobra.Command
+
+	Producer sarama.SyncProducer
+	Consumer *cluster.Consumer
 )
 
 func init() {
-	if Verbose {
-		sarama.Logger = log.New(os.Stderr, "[sarama] ", log.LstdFlags)
-	}
+	//sarama.Logger = log.New(os.Stderr, "[debug-sarama] ", log.LstdFlags)
 
 	Cli = &cobra.Command{
 		Use:   "kafka-client",
@@ -52,6 +54,8 @@ func init() {
 }
 
 func main() {
+	SetupGracefulShutdown()
+
 	err := Cli.Execute()
 	HandleError(err)
 }
@@ -61,4 +65,19 @@ func HandleError(err error) {
 		fmt.Println("An error occurred: ", err.Error())
 		os.Exit(1)
 	}
+}
+
+func SetupGracefulShutdown() {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	go func() {
+		<-c
+		if Producer != nil {
+			Producer.Close()
+		}
+		if Consumer != nil {
+			Consumer.Close()
+		}
+		os.Exit(1)
+	}()
 }

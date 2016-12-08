@@ -2,94 +2,67 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"os/signal"
 
 	"github.com/Shopify/sarama"
+	log "github.com/Sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"gopkg.in/bsm/sarama-cluster.v2"
 )
 
 // Consume consumes messages from Kafka
 func Consume(cmd *cobra.Command, args []string) {
+
 	var config = sarama.NewConfig()
 	config.Net.TLS.Enable = true
 	config.Net.SASL.Enable = true
 	config.Net.SASL.User = Username
 	config.Net.SASL.Password = Password
+	config.Version = sarama.V0_10_0_1
 	config.ClientID = Username
-
-	client, err := sarama.NewClient([]string{BrokerAddr}, config)
-	HandleError(err)
 
 	if ConsumerGroup == "" {
 		ConsumerGroup = Username + ".go"
 	}
 
-	// Create an offsetManager
-	offsetManager, err := sarama.NewOffsetManagerFromClient(ConsumerGroup, client)
+	clusterConfig := cluster.NewConfig()
+	clusterConfig.Config = *config
+	clusterConfig.Consumer.Return.Errors = true
+	clusterConfig.Group.Return.Notifications = true
+
+	var err error
+	Consumer, err = cluster.NewConsumer([]string{BrokerAddr}, ConsumerGroup, []string{Topic}, clusterConfig)
 	HandleError(err)
 
-	// Create a consumer
-	consumer, err := sarama.NewConsumerFromClient(client)
-	HandleError(err)
+	// Consume errors
+	go func() {
+		for err := range Consumer.Errors() {
+			log.WithError(err).Error("Error during consumption")
+		}
+	}()
 
-	// Create the message chan, that will receive the messages
-	messagesChan := make(chan string)
-
-	// read the number of partition for the given topic
-	partitions, err := consumer.Partitions(Topic)
-	HandleError(err)
-
-	// Create a consumer for each partition
-	for _, p := range partitions {
-		partitionOffsetManager, err := offsetManager.ManagePartition(Topic, p)
-		HandleError(err)
-		defer partitionOffsetManager.AsyncClose()
-
-		// Start a partition consumer from the next offset
-		offset, _ := partitionOffsetManager.NextOffset()
-		partitionConsumer, err := consumer.ConsumePartition(Topic, p, offset)
-		HandleError(err)
-		defer partitionConsumer.AsyncClose()
-
-		// Asynchronously consume messages
-		go consumptionHandler(partitionConsumer, partitionOffsetManager, messagesChan)
-	}
+	// Consume notifications
+	go func() {
+		for note := range Consumer.Notifications() {
+			log.WithField("note", note).Debug("Rebalanced consumer")
+		}
+	}()
 
 	fmt.Println("Ready to consume messages...")
+	// Consume messages
+	for msg := range Consumer.Messages() {
 
-	// Trap SIGINT to trigger a shutdown
-	sigint := make(chan os.Signal, 1)
-	signal.Notify(sigint, os.Interrupt)
+		log.WithFields(log.Fields{
+			"consumerGroup": ConsumerGroup,
+			"topic":         Topic,
+			"timestamp":     msg.Timestamp,
+			"key":           string(msg.Key),
+			"value":         string(msg.Value),
+			"partition":     msg.Partition,
+			"offset":        msg.Offset,
+		}).Debug("Consume message")
 
-consumerLoop:
-	for {
-		select {
-		case msg := <-messagesChan:
-			fmt.Printf("%s\n", msg)
-		case <-sigint:
-			close(messagesChan)
-			consumer.Close()
-			client.Close()
-			break consumerLoop
-		}
-	}
+		Consumer.MarkOffset(msg, "")
 
-}
-
-// ConsumptionHandler pipes the consumed messages and push them to a chan
-func consumptionHandler(pc sarama.PartitionConsumer, pom sarama.PartitionOffsetManager, messagesChan chan string) {
-	for {
-		select {
-		case msg := <-pc.Messages():
-			messagesChan <- string(msg.Value)
-			pom.MarkOffset(msg.Offset+1, Topic)
-
-		case err := <-pc.Errors():
-			fmt.Println(err)
-
-		case offsetErr := <-pom.Errors():
-			fmt.Println(offsetErr)
-		}
+		fmt.Println(string(msg.Value))
 	}
 }

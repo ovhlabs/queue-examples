@@ -9,6 +9,18 @@
 			"revisionTime": "2016-11-29T15:23:52Z"
 		},
 		{
+			"checksumSHA1": "h5Q1o+kA7VMAR5QpBzVJZbBEgC0=",
+			"path": "github.com/Sirupsen/logrus",
+			"revision": "881bee4e20a5d11a6a88a5667c6f292072ac1963",
+			"revisionTime": "2016-12-02T02:35:07Z"
+		},
+		{
+			"checksumSHA1": "Nr1k4e6YdUY0az0VD5lo1RzLW50=",
+			"path": "github.com/bsm/sarama-cluster",
+			"revision": "178c4701cd03216c91794f18d3373b13b97f6466",
+			"revisionTime": "2016-03-22T08:14:56Z"
+		},
+		{
 			"checksumSHA1": "5rPfda8jFccr3A6heL+JAmi9K9g=",
 			"path": "github.com/davecgh/go-spew/spew",
 			"revision": "5215b55f46b2b919f50a1df0eaa5886afe4e3b3d",
@@ -63,24 +75,28 @@
 			"revisionTime": "2016-09-21T19:52:07Z"
 		},
 		{
-			"checksumSHA1": "0+RldICstvsYj/h/jPIRJszCA0g=",
-			"path": "github.com/runabove/queue-examples/go/cmd",
-			"revision": "06f2f84cb362b8cd56d8544d7b24a4f123b11ee7",
-			"revisionTime": "2016-11-30T11:32:12Z"
-		},
-		{
 			"checksumSHA1": "gAhLoEQbazL8ZNWQzA9ch/8kB/s=",
-			"origin": "github.com/runabove/queue-examples/go/vendor/github.com/spf13/cobra",
 			"path": "github.com/spf13/cobra",
 			"revision": "65a708cee0a4424f4e353d031ce440643e312f92",
 			"revisionTime": "2016-02-07T18:29:17Z"
 		},
 		{
 			"checksumSHA1": "MrBzoMkuXdrGKo09/ka+JCC2Mlk=",
-			"origin": "github.com/runabove/queue-examples/go/vendor/github.com/spf13/pflag",
 			"path": "github.com/spf13/pflag",
 			"revision": "7f60f83a2c81bc3c3c0d5297f61ddfa68da9d3b7",
 			"revisionTime": "2015-10-24T10:54:09Z"
+		},
+		{
+			"checksumSHA1": "p36nkSZUaOs/7Wtcy/FduBLgm8g=",
+			"path": "gopkg.in/Shopify/sarama.v1",
+			"revision": "bd61cae2be85fa6ff40eb23dcdd24567967ac2ae",
+			"revisionTime": "2016-08-30T13:25:53Z"
+		},
+		{
+			"checksumSHA1": "Z1YNAE922kjhVP1PCzjRP3T4H6U=",
+			"path": "gopkg.in/bsm/sarama-cluster.v2",
+			"revision": "dc1a390cf63c40d0a20ee9f79c4be120f79110e5",
+			"revisionTime": "2016-07-25T12:50:08Z"
 		}
 	],
 	"rootPath": "stash.ovh.net/qaas/queue-examples/go"
