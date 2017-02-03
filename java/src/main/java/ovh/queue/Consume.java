@@ -14,7 +14,7 @@ public class Consume extends Command {
 
   public static String NAME = "consume";
 
-  @Parameter(names="--consumer-group", description = "Consumer group", required=true)
+  @Parameter(names="--consumer-group", description = "Consumer group, prefixed by your SASL username (eg. --consumer-group=myns.user.g1)", required=true)
   public String group;
 
   public void run() {

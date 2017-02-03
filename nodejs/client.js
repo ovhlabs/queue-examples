@@ -88,10 +88,10 @@ function consume(params) {
 
 var options = [
   cliparse.option("broker", { description: "Kafka broker address"}),
-  cliparse.option("topic", { description: "Topic"}),
-  cliparse.option("username", { description: "SASL username"}),
+  cliparse.option("topic", { description: "Topic, prefixed by your namespace (eg. --topic=myns.topic)"}),
+  cliparse.option("username", { description: "SASL username, prefixed by your namespace (eg. --username=myns.user)"}),
   cliparse.option("password", { description: "SASL password"}),
-  cliparse.option("consumer-group", { description: "Consumer group"}),
+  cliparse.option("consumer-group", { description: "Consumer group, prefixed by your SASL username (eg. --consumer-group=myns.user.g1)"}),
 ];
 
 cliparse.parse(

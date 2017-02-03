@@ -17,12 +17,12 @@ and requires four flags:
     --password  the SASL password
     --topic     the Kafka topic
 
-***When using OVH Queue the consumer group must be prefixed by the username*** using the
-`--consumer-group` flag (ex: --username collector.admin --consumer-group collector.admin.group).
+***When using OVH Queue***:
+ - ***the topic must be prefixed by the namespace*** (ex: --topic collector.events where the namespace is collector)
+ - ***the consumer group must be prefixed by the username*** (ex: --username collector.admin --consumer-group collector.admin.group).
 
 Set the following environment variables to execute the commands shown below:
  `HOST`, `SASL_USERNAME`, `SASL_PASSWORD`, `TOPIC`.
-
 
 ## Go
 
