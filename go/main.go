@@ -34,10 +34,10 @@ func init() {
 	}
 
 	Cli.PersistentFlags().StringVar(&BrokerAddr, "broker", "", "Kafka broker address")
-	Cli.PersistentFlags().StringVar(&Topic, "topic", "", "Topic")
-	Cli.PersistentFlags().StringVar(&Username, "username", "", "SASL username")
+	Cli.PersistentFlags().StringVar(&Topic, "topic", "", "Topic, prefixed by your namespace (eg. --topic=myns.topic)")
+	Cli.PersistentFlags().StringVar(&Username, "username", "", "SASL username, prefixed by your namespace (eg. --username=myns.user)")
 	Cli.PersistentFlags().StringVar(&Password, "password", "", "SASL password")
-	Cli.PersistentFlags().StringVar(&ConsumerGroup, "consumer-group", "", "Consumer group")
+	Cli.PersistentFlags().StringVar(&ConsumerGroup, "consumer-group", "", "Consumer group, prefixed by your SASL username (eg. --consumer-group=myns.user.g1)")
 	Cli.PersistentFlags().BoolVar(&Verbose, "verbose", false, "Verbose mode")
 
 	Cli.AddCommand(&cobra.Command{

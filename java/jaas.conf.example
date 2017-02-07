@@ -1,5 +1,7 @@
 KafkaClient {
   org.apache.kafka.common.security.plain.PlainLoginModule required
+  // SASL username, prefixed by your namespace (eg. --username=myns.user)
   username="$USERNAME"
+  // SASL password
   password="$PASSWORD";
 };
