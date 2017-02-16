@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/Shopify/sarama"
 	log "github.com/Sirupsen/logrus"
@@ -30,7 +31,7 @@ func Consume(cmd *cobra.Command, args []string) {
 	clusterConfig.Group.Return.Notifications = true
 
 	var err error
-	Consumer, err = cluster.NewConsumer([]string{BrokerAddr}, ConsumerGroup, []string{Topic}, clusterConfig)
+	Consumer, err = cluster.NewConsumer(strings.Split(BrokerAddrs, ","), ConsumerGroup, []string{Topic}, clusterConfig)
 	HandleError(err)
 
 	// Consume errors
