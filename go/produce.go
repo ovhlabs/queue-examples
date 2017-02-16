@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/Shopify/sarama"
 	"github.com/spf13/cobra"
@@ -21,7 +22,7 @@ func Produce(cmd *cobra.Command, args []string) {
 	config.Producer.Return.Successes = true
 
 	var err error
-	Producer, err = sarama.NewSyncProducer([]string{BrokerAddr}, config)
+	Producer, err = sarama.NewSyncProducer(strings.Split(BrokerAddrs, ","), config)
 	HandleError(err)
 
 	fmt.Println("Ready to produce messages. Write something to stdin...")

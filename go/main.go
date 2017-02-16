@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	BrokerAddr    string
+	BrokerAddrs   string
 	Topic         string
 	Username      string
 	Password      string
@@ -33,7 +33,7 @@ func init() {
 		Short: "Go Kafka client to produce/consume using SASL/SSL",
 	}
 
-	Cli.PersistentFlags().StringVar(&BrokerAddr, "broker", "", "Kafka broker address")
+	Cli.PersistentFlags().StringVar(&BrokerAddrs, "brokers", "", "List of Kafka broker addresses separated by commas")
 	Cli.PersistentFlags().StringVar(&Topic, "topic", "", "Topic, prefixed by your namespace (eg. --topic=myns.topic)")
 	Cli.PersistentFlags().StringVar(&Username, "username", "", "SASL username, prefixed by your namespace (eg. --username=myns.user)")
 	Cli.PersistentFlags().StringVar(&Password, "password", "", "SASL password")
