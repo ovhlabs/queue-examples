@@ -12,9 +12,9 @@ deploy:
   api_key:
     secure: fQKmahdH8ayPfG0yEZxYnhjAFKUda0vz5Wo9pARAwpwzpCmd3/90LfgtGLZkrhEzjvXG2pR+A05VwVdZELChj1bDG4suWQHzbWOpkEqmAmk3h+YDdYI/zhY/x4IyZnrOClrHQFfdv3DRV/mB307OFPeKLQjJ/yKjPSQ/SlTA9Z6c/zmsK1TpIUVn3jD/7BiFE6uSWoEE5OpSVC3mIW0Wi6txHlj63vYkQgA30cungpagjKRBDWik/Ek/xeXTxrMowDUtoixtHuzEi+YcpnY6IPRVoHcZNz5XrMeV8Mecfu9jjelWzfI6/nms23sIHS492E6HUeCa2cMeQzc7fCFnX85ghJ2/jBp9u6UCwingQ48139xYvj82bNDQ9PAHY49MhRDq4X2DL+ASXZvl8YMO9FVtHAnOxfDE34deBSJDQGh7nsulLpqoGzDIlx8GoGF24e16UrFrA7YO4hg2uZEs/J/akEPE1sqePHV3Gv/0o7JExyTmp4BVDEMvaPvQgfdEioLAAeGbp0oab0xHpWvy3pSwHCU2UeJRQCaiVz1Gx5aA3C62QVsmNzIumFqLqv1bUmDrmWjCkgR/KK67TtNEBqlCjd3d9T8yiEioUeQUOCqw3LB4favIkBQz5QP8UEgGtnMTKwpqZyE/EhFpu63Jpv3wDtxf0LYdXHQPN4pjOSQ=
   file:
-    - go/bin/kafka-client-Darwin-amd64
-    - go/bin/kafka-client-Linux-amd64
-    - go/bin/kafka-client-Windows-amd64
+    - bin/kafka-client-Darwin-amd64
+    - bin/kafka-client-Linux-amd64
+    - bin/kafka-client-Windows-amd64
   on:
     repo: runabove/queue-examples
     tags: true
