@@ -43,7 +43,7 @@ go build -o kafka-client
 
 ```
 ./kafka-client consume \
-    --broker $HOST:9093 \
+    --brokers $HOST:9093 \
     --username $SASL_USERNAME --password $SASL_PASSWORD \
     --topic $TOPIC --consumer-group $SASL_USERNAME.group-go
 ```
@@ -52,7 +52,7 @@ go build -o kafka-client
 
 ```
 ./kafka-client produce \
-    --broker $HOST:9093 \
+    --brokers $HOST:9093 \
     --username $SASL_USERNAME --password $SASL_PASSWORD \
     --topic $TOPIC
 ```
